@@ -1,0 +1,123 @@
+package com.mycompany.dsaconsolems1;
+
+import java.util.*;
+
+public class MS1DSAStockInventory {
+    private static final List<String[]> inventory = new ArrayList<>();
+    private static final Scanner scanner = new Scanner(System.in);
+    
+    public static void main(String[] args) {
+        insertFixedData();
+        while (true) {
+            System.out.println("\nMotorPH Inventory Stock Management");
+            System.out.println("1. Add Data\n2. Delete Data\n3. Search Data\n4. Display Inventory\n5. Sort Inventory\n6. Exit");
+            System.out.print("Enter choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (choice) {
+                case 1 -> addData();
+                case 2 -> deleteData();
+                case 3 -> searchData();
+                case 4 -> displayInventory();
+                case 5 -> sortInventory();
+                case 6 -> {
+                    System.out.println("Exiting...");
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+    
+    private static void insertFixedData() {
+        inventory.add(new String[]{"2/1/2023", "Old", "Honda", "142QVTSIUR", "On-hand"});
+        inventory.add(new String[]{"2/1/2023", "Old", "Honda", "PZCT1S00XE", "Sold"});
+        inventory.add(new String[]{"2/1/2023", "Old", "Honda", "4VBTB8YNM7", "Sold"});
+        inventory.add(new String[]{"2/1/2023", "Old", "Honda", "95AN3AWVF4", "On-hand"});
+        inventory.add(new String[]{"2/3/2023", "Old", "Kawasaki", "483QHIM661", "On-hand"});
+        inventory.add(new String[]{"2/3/2023", "Old", "Kymco", "SPHA17SSEE", "On-hand"});
+        inventory.add(new String[]{"2/3/2023", "Old", "Kymco", "0AV7SWGX93", "Sold"});
+        inventory.add(new String[]{"2/4/2023", "Old", "Kymco", "QMUB6UYLKL", "Sold"});
+        inventory.add(new String[]{"2/4/2023", "Old", "Honda", "V96GMTFFEI", "Sold"});
+        inventory.add(new String[]{"2/4/2023", "Old", "Kawasaki", "4J8UA0FMVY", "Sold"});
+    }
+    
+    private static void addData() {
+        System.out.print("Enter Date Entered (mm/dd/yyyy): ");
+        String date = scanner.nextLine();
+        System.out.print("Enter Stock Label (Old/New): ");
+        String label = scanner.nextLine();
+        System.out.print("Enter Brand: ");
+        String brand = scanner.nextLine();
+        System.out.print("Enter Engine #: ");
+        String engineNum = scanner.nextLine();
+        System.out.print("Enter Status (On-hand/Sold): ");
+        String status = scanner.nextLine();
+        
+        inventory.add(new String[]{date, label, brand, engineNum, status});
+        System.out.println("Data added successfully.");
+    }
+    
+    private static void deleteData() {
+        System.out.print("Enter Engine # to delete: ");
+        String engineNum = scanner.nextLine();
+        
+        Iterator<String[]> iterator = inventory.iterator();
+        while (iterator.hasNext()) {
+            String[] item = iterator.next();
+            if (item[3].equals(engineNum)) {
+                iterator.remove();
+                System.out.println("Item deleted successfully.");
+                return;
+            }
+        }
+        System.out.println("Item not found.");
+    }
+    
+    private static void searchData() {
+        System.out.print("Enter Engine # to search: ");
+        String engineNum = scanner.nextLine();
+        
+        for (String[] item : inventory) {
+            if (item[3].equals(engineNum)) {
+                System.out.println("Item found: " + Arrays.toString(item));
+                return;
+            }
+        }
+        System.out.println("Item not found.");
+    }
+    
+    private static void displayInventory() {
+        System.out.println("\nInventory List:");
+        for (String[] item : inventory) {
+            System.out.println(Arrays.toString(item));
+        }
+    }
+    
+    private static void sortInventory() {
+        System.out.println("Sort by:");
+        System.out.println("1. Date Entered\n2. Stock Label\n3. Brand\n4. Engine #\n5. Status");
+        System.out.print("Enter choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        
+        Comparator<String[]> comparator = switch (choice) {
+            case 1 -> Comparator.comparing(item -> item[0]); // Sort by date entered
+            case 2 -> Comparator.comparing(item -> item[1]); // Sort by stock label
+            case 3 -> Comparator.comparing(item -> item[2]); // Sort by brand
+            case 4 -> Comparator.comparing(item -> item[3]); // Sort by engine number
+            case 5 -> Comparator.comparing(item -> item[4]); // Sort by status
+            default -> {
+                System.out.println("Invalid choice. Sorting aborted.");
+                yield null;
+            }
+        };
+        
+        if (comparator != null) {
+            inventory.sort(comparator);
+            System.out.println("Inventory sorted successfully.");
+            displayInventory();
+        }
+    }
+}
