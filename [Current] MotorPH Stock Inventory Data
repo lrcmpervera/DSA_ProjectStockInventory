@@ -6,11 +6,12 @@ public class MS1DSAStockInventory {
     private static final List<String[]> inventory = new ArrayList<>();
     private static final Scanner scanner = new Scanner(System.in);
     
+    //Code for options seen once logged in or we run the code.
     public static void main(String[] args) {
         insertFixedData();
         while (true) {
             System.out.println("\nMotorPH Inventory Stock Management");
-            System.out.println("1. Add Data\n2. Delete Data\n3. Search Data\n4. Display Inventory\n5. Sort Inventory\n6. Exit");
+            System.out.println("1. Add Data\n2. Delete Data\n3. Sort Data\n4. Search Inventory\n5. Display Inventory\n6. Exit");
             System.out.print("Enter choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -18,9 +19,9 @@ public class MS1DSAStockInventory {
             switch (choice) {
                 case 1 -> addData();
                 case 2 -> deleteData();
-                case 3 -> searchData();
-                case 4 -> displayInventory();
-                case 5 -> sortInventory();
+                case 3 -> sortInventory();
+                case 4 -> searchData();
+                case 5 -> displayInventory();
                 case 6 -> {
                     System.out.println("Exiting...");
                     return;
@@ -30,19 +31,21 @@ public class MS1DSAStockInventory {
         }
     }
     
+    //This is where we put the fixed data from the inventory file. We will only show 10. It will display the data available for the user.
     private static void insertFixedData() {
-        inventory.add(new String[]{"2/1/2023", "Old", "Honda", "142QVTSIUR", "On-hand"});
-        inventory.add(new String[]{"2/1/2023", "Old", "Honda", "PZCT1S00XE", "Sold"});
-        inventory.add(new String[]{"2/1/2023", "Old", "Honda", "4VBTB8YNM7", "Sold"});
-        inventory.add(new String[]{"2/1/2023", "Old", "Honda", "95AN3AWVF4", "On-hand"});
-        inventory.add(new String[]{"2/3/2023", "Old", "Kawasaki", "483QHIM661", "On-hand"});
-        inventory.add(new String[]{"2/3/2023", "Old", "Kymco", "SPHA17SSEE", "On-hand"});
-        inventory.add(new String[]{"2/3/2023", "Old", "Kymco", "0AV7SWGX93", "Sold"});
-        inventory.add(new String[]{"2/4/2023", "Old", "Kymco", "QMUB6UYLKL", "Sold"});
-        inventory.add(new String[]{"2/4/2023", "Old", "Honda", "V96GMTFFEI", "Sold"});
-        inventory.add(new String[]{"2/4/2023", "Old", "Kawasaki", "4J8UA0FMVY", "Sold"});
+        inventory.add(new String[]{"02/01/2023", "Old", "Honda", "142QVTSIUR", "On-hand"});
+        inventory.add(new String[]{"02/01/2023", "Old", "Honda", "PZCT1S00XE", "Sold"});
+        inventory.add(new String[]{"02/01/2023", "Old", "Honda", "4VBTB8YNM7", "Sold"});
+        inventory.add(new String[]{"02/01/2023", "Old", "Honda", "95AN3AWVF4", "On-hand"});
+        inventory.add(new String[]{"02/03/2023", "Old", "Kawasaki", "483QHIM661", "On-hand"});
+        inventory.add(new String[]{"02/03/2023", "Old", "Kymco", "SPHA17SSEE", "On-hand"});
+        inventory.add(new String[]{"02/03/2023", "Old", "Kymco", "0AV7SWGX93", "Sold"});
+        inventory.add(new String[]{"02/04/2023", "Old", "Kymco", "QMUB6UYLKL", "Sold"});
+        inventory.add(new String[]{"02/04/2023", "Old", "Honda", "V96GMTFFEI", "Sold"});
+        inventory.add(new String[]{"02/04/2023", "Old", "Kawasaki", "4J8UA0FMVY", "Sold"});
     }
     
+    //This is the code where employees will be allowed to add data to the inventory system. 
     private static void addData() {
         System.out.print("Enter Date Entered (mm/dd/yyyy): ");
         String date = scanner.nextLine();
@@ -59,6 +62,7 @@ public class MS1DSAStockInventory {
         System.out.println("Data added successfully.");
     }
     
+    //This is where we will allow the employees to delete inventory stock data. A checker is added to double check if the employee is sure to delete data.
     private static void deleteData() {
         System.out.print("Enter Engine # to delete: ");
         String engineNum = scanner.nextLine();
@@ -67,14 +71,23 @@ public class MS1DSAStockInventory {
         while (iterator.hasNext()) {
             String[] item = iterator.next();
             if (item[3].equals(engineNum)) {
-                iterator.remove();
-                System.out.println("Item deleted successfully.");
+                System.out.println("Are you sure you want to delete this item? " + Arrays.toString(item)); //Checker if user is sure or not
+                System.out.print("Enter 'Yes' to confirm: ");
+                String confirmation = scanner.nextLine();
+                
+                if (confirmation.equalsIgnoreCase("Yes")) {
+                    iterator.remove();
+                    System.out.println("Item deleted successfully.");
+                } else {
+                    System.out.println("Deletion canceled.");
+                }
                 return;
             }
         }
         System.out.println("Item not found.");
     }
     
+    //This will allow the user to search an inventory data using the engine #. This will also confirm if the data is existing or not.
     private static void searchData() {
         System.out.print("Enter Engine # to search: ");
         String engineNum = scanner.nextLine();
